@@ -1,12 +1,12 @@
 package lexer
 
-import "monkey/token"
+import "github.com/okamotchan/monkey/token"
 
 type Lexer struct {
 	input string
 	position int // 入力における現在の位置（現在の文字を示す）
 	readPosition int // これから読み込む位置（現在の文字の次）
-	ch byte　// 現在検査中の文字
+	ch byte // 現在検査中の文字
 }
 
 func New(input string) *Lexer {
@@ -19,7 +19,7 @@ func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
 	} else {
-		l.ch = l.input[l.readPostion]
+		l.ch = l.input[l.readPosition]
 	}
 	l.position = l.readPosition
 	l.readPosition += 1
@@ -32,7 +32,7 @@ func (l *Lexer) NextToken() token.Token {
 	case '=':
 		tok = newToken(token.ASSIGN, l.ch)
 	case ';':
-		tok = newToken(token.SEMICORON, l ch)
+		tok = newToken(token.SEMICORON, l.ch)
 	case '(':
 		tok = newToken(token.LPAREN, l.ch)
 	case ')':
@@ -54,6 +54,6 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
-func NewToken(tokenType token.TokenType, ch byte) token.Token {
+func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
