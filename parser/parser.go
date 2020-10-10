@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strconv"
 	"github.com/okamotchan/monkey/ast"
 	"github.com/okamotchan/monkey/lexer"
 	"github.com/okamotchan/monkey/token"
@@ -57,6 +58,9 @@ func New(l *lexer.Lexer) *Parser {
 
 	// 識別子が出現したらparseIdentifierを呼び出す
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
+
+	// 数値が出現したらparseIntegerLiteralを呼びだす
+	p.registerPrefix(token.INT, p.parseIntegerLiteral)
 
 	// 2つトークンを読み込む。curTokenとpeekTokenの両方がセットされる
 	p.nextToken()
@@ -178,4 +182,19 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	leftExp := prefix()
 
 	return leftExp
+}
+
+// 文字列を数値int64に変換
+func (p *Parser) parseIntegerLiteral() ast.Expression {
+	lit := &ast.IntegerLiteral{Token: p.curToken}
+
+	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
+		p.errors = append(p.errors, msg)
+		return nil
+	}
+	
+	lit.Value = value
+	return lit
 }
