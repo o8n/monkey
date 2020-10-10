@@ -3,7 +3,6 @@ package ast
 import (
 	"bytes"
 
-	"github.com/okamotchan/monkey/ast"
 	"github.com/okamotchan/monkey/token"
 )
 
